@@ -13,53 +13,50 @@ const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
+        pass: process.env.EMAIL_PASS
+    }
 });
 
 app.post("/contact", async (req, res) => {
 
-    ```
-const { name, email, message } = req.body;
+    const { name, email, message } = req.body;
 
-if (!name || !email || !message) {
+    if (!name || !email || !message) {
+        return res.status(400).json({
+            message: "All fields are required"
+        });
+    }
 
-    return res.status(400).json({
-        message: "All fields are required"
-    });
-
-}
-
-const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_USER,
-    subject: "New Portfolio Contact",
-    html: `
-        < h2 > New Contact Message</h2 >
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER,
+        subject: "New Portfolio Contact",
+        html: `
+        <h2>New Contact Message</h2>
         <p><b>Name:</b> ${name}</p>
         <p><b>Email:</b> ${email}</p>
         <p><b>Message:</b> ${message}</p>
     `
-};
+    };
 
-try {
+    try {
 
-    await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
 
-    res.status(200).json({
-        message: "Message Sent Successfully"
-    });
+        res.status(200).json({
+            message: "Message Sent Successfully"
+        });
 
-} catch (error) {
+    } catch (error) {
 
-    console.log("Email Error:", error);
+        console.log("Email Error:", error);
 
-    res.status(500).json({
-        message: "Failed to send email"
-    });
+        res.status(500).json({
+            message: "Failed to send email"
+        });
 
-}
-```
+    }
+
 
 });
 
